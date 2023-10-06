@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"log"
+	"strings"
 )
 
 var (
@@ -28,11 +29,17 @@ func (l *systemLogger) LogArgs(level int, args map[string]any, msg string, field
 	if level < 0 || level >= len(logLevelNames) {
 		return
 	}
-	if len(fields) == 0 {
-		log.Printf("[%s] %s", logLevelNames[level], msg)
-	} else {
-		log.Printf("[%s] %s", logLevelNames[level], fmt.Sprintf(msg, fields...))
+	if len(fields) > 0 {
+		msg = fmt.Sprintf(msg, fields...)
 	}
+	if len(args) > 0 {
+		ab := strings.Builder{}
+		for k, v := range args {
+			ab.WriteString(fmt.Sprintf(" %s=%v", k, v))
+		}
+		msg = fmt.Sprintf("%s%s", msg, ab.String())
+	}
+	log.Printf("[%s] %s", logLevelNames[level], msg)
 }
 
 type discardLogger struct{}
