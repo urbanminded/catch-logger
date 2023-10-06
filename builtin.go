@@ -37,7 +37,7 @@ func (l *systemLogger) LogArgs(level int, args map[string]any, msg string, field
 		for k, v := range args {
 			ab.WriteString(fmt.Sprintf(" %s=%v", k, v))
 		}
-		msg = fmt.Sprintf("%s%s", msg, ab.String())
+		msg = fmt.Sprintf("%s [%s]", msg, ab.String()[1:])
 	}
 	log.Printf("[%s] %s", logLevelNames[level], msg)
 }
